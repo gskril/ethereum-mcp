@@ -7,7 +7,7 @@ Add the following to your MCP client (Cursor, Claude Desktop, etc.) config:
   "mcpServers": {
     "ethereum": {
       "command": "npx",
-      "args": ["mcp-remote", "http://localhost:8787/mcp"]
+      "args": ["mcp-remote", "https://ethereum-mcp.gregskril.workers.dev/mcp"]
     }
   }
 }
@@ -19,7 +19,7 @@ Some clients (like Cursor) also support a simplified config:
 {
   "mcpServers": {
     "ethereum": {
-      "url": "http://localhost:8787/mcp"
+      "url": "https://ethereum-mcp.gregskril.workers.dev/mcp"
     }
   }
 }
