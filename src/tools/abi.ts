@@ -1,11 +1,15 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import {
+  decodeAbiParameters as decodeAbiParametersViem,
   decodeFunctionData,
+  encodeAbiParameters as encodeAbiParametersViem,
   encodeFunctionData,
   isHex,
   toFunctionSelector,
 } from 'viem'
 import { z } from 'zod'
+
+import { replaceBigInts } from '../utils/replaceBigints'
 
 export const EncodeAbiSchema = z.object({
   abi: z.string().describe('The ABI of the contract'),
@@ -72,5 +76,57 @@ export function functionSelector({
 
   return {
     content: [{ type: 'text', text: selector }],
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const EncodeAbiParametersSchema = z.object({
+  params: z
+    .array(z.object({ type: z.string(), name: z.string().optional() }))
+    .describe(
+      "Array of ABI types like `[{ type: 'uint32' }, { type: 'bytes32' }]`"
+    ),
+  values: z.array(z.any()).describe('The values to encode'),
+})
+
+export function encodeAbiParameters({
+  params,
+  values,
+}: z.infer<typeof EncodeAbiParametersSchema>): CallToolResult {
+  const encoded = encodeAbiParametersViem(params, values)
+
+  return {
+    content: [{ type: 'text', text: encoded }],
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const DecodeAbiParametersSchema = z.object({
+  params: z
+    .array(z.object({ type: z.string(), name: z.string().optional() }))
+    .describe(
+      "Array of ABI types like `[{ type: 'uint32' }, { type: 'bytes32' }]`"
+    ),
+  data: z
+    .string()
+    .refine(isHex, {
+      message: 'Data must be a hex string',
+    })
+    .describe('The hex data to decode'),
+})
+
+export function decodeAbiParameters({
+  params,
+  data,
+}: z.infer<typeof DecodeAbiParametersSchema>): CallToolResult {
+  const decoded = decodeAbiParametersViem(params, data)
+
+  // Replace bigint with string
+  const formatted = replaceBigInts(decoded, (x) => x.toString())
+
+  return {
+    content: [{ type: 'text', text: JSON.stringify(formatted, null, 2) }],
   }
 }

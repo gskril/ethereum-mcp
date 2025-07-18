@@ -2,11 +2,15 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { McpAgent } from 'agents/mcp'
 
 import {
+  DecodeAbiParametersSchema,
   DecodeAbiSchema,
+  EncodeAbiParametersSchema,
   EncodeAbiSchema,
   FunctionSelectorSchema,
   decodeAbi,
+  decodeAbiParameters,
   encodeAbi,
+  encodeAbiParameters,
   functionSelector,
 } from './tools/abi'
 import {
@@ -30,6 +34,25 @@ export class EthereumMCP extends McpAgent {
   })
 
   async init() {
+    // Encode ABI parameters
+    this.server.tool(
+      'encode-abi-parameters',
+      [
+        'Generates ABI encoded data given a set of ABI parameters and their corresponding values.',
+        'Example: params: `[{ type: "uint32" }, { type: "bytes" }]`, values: `[1, "0x1234567890"]`',
+      ].join('\n'),
+      EncodeAbiParametersSchema.shape,
+      encodeAbiParameters
+    )
+
+    // Decode ABI parameters
+    this.server.tool(
+      'decode-abi-parameters',
+      'Decodes ABI encoded data (a hex string) into a set of ABI parameters and their corresponding values.',
+      DecodeAbiParametersSchema.shape,
+      decodeAbiParameters
+    )
+
     // Decode ABI
     this.server.tool(
       'decode-function-data',
