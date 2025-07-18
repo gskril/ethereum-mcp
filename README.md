@@ -2,7 +2,7 @@
 
 Avaiable tools by category:
 
-- ABI: `encode-abi-parameters`, `decode-abi-parameters`, `decode-function-data`, `encode-function-data`, `function-selector`
+- ABI: `encode-abi-parameters`, `decode-abi-parameters`, `decode-function-data`, `encode-function-data`, `fetch-abi`, `function-selector`
 - Crypto: `create-wallet`, `keccak256-hash`
 - ENS: `resolve-ens-address`, `resolve-ens-name`
 

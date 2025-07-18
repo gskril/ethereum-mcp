@@ -6,11 +6,13 @@ import {
   DecodeAbiSchema,
   EncodeAbiParametersSchema,
   EncodeAbiSchema,
+  FetchAbiSchema,
   FunctionSelectorSchema,
   decodeAbi,
   decodeAbiParameters,
   encodeAbi,
   encodeAbiParameters,
+  fetchAbi,
   functionSelector,
 } from './tools/abi'
 import {
@@ -67,6 +69,14 @@ export class EthereumMCP extends McpAgent {
       'Encode a function call into a hex string',
       EncodeAbiSchema.shape,
       encodeAbi
+    )
+
+    // Fetch ABI
+    this.server.tool(
+      'fetch-abi',
+      'Fetch the ABI for a smart contract',
+      FetchAbiSchema.shape,
+      fetchAbi
     )
 
     // Function selector

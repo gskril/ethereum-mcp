@@ -4,9 +4,10 @@ import {
   decodeFunctionData,
   encodeAbiParameters as encodeAbiParametersViem,
   encodeFunctionData,
+  isAddress,
   isHex,
   toFunctionSelector,
-} from 'viem'
+} from 'viem/utils'
 import { z } from 'zod'
 
 import { replaceBigInts } from '../utils/replaceBigints'
@@ -128,5 +129,56 @@ export function decodeAbiParameters({
 
   return {
     content: [{ type: 'text', text: JSON.stringify(formatted, null, 2) }],
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const FetchAbiSchema = z.object({
+  address: z
+    .string()
+    .refine(isAddress, {
+      message: 'Address must be a valid address',
+    })
+    .describe('The address of the contract'),
+  network: z
+    .enum([
+      'mainnet',
+      'goerli',
+      'sepolia',
+      'avalanche',
+      'avalancheFuji',
+      'arbitrum',
+      'arbitrumGoerli',
+      'arbitrumNova',
+      'base',
+      'baseGoerli',
+      'bsc',
+      'bscTestnet',
+      'fantom',
+      'fantomTestnet',
+      'polygon',
+      'polygonMumbai',
+      'polygonZkEvm',
+      'polygonZkEvmTestnet',
+      'optimism',
+      'optimismGoerli',
+      'gnosis',
+    ])
+    .default('mainnet')
+    .describe(
+      'The network of the contract. If not provided, the default is mainnet.'
+    ),
+})
+
+export async function fetchAbi({
+  address,
+  network,
+}: z.infer<typeof FetchAbiSchema>): Promise<CallToolResult> {
+  const res = await fetch(`https://abidata.net/${address}?network=${network}`)
+  const data = await res.json()
+
+  return {
+    content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
   }
 }
