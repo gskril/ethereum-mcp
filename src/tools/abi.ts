@@ -58,7 +58,7 @@ export function decodeAbi({
 ////////////////////////////////////////////////////////////////////////////////
 
 export const FunctionSelectorSchema = z.object({
-  abiFunction: z
+  abiItem: z
     .string()
     .describe(
       'The Solidity function, event or error like `function ownerOf(uint256 tokenId)`'
@@ -66,9 +66,9 @@ export const FunctionSelectorSchema = z.object({
 })
 
 export function functionSelector({
-  abiFunction,
+  abiItem,
 }: z.infer<typeof FunctionSelectorSchema>): CallToolResult {
-  const selector = toFunctionSelector(abiFunction)
+  const selector = toFunctionSelector(abiItem)
 
   return {
     content: [{ type: 'text', text: selector }],

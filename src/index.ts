@@ -30,36 +30,20 @@ export class EthereumMCP extends McpAgent {
   })
 
   async init() {
-    // Forward ENS resolution
+    // Decode ABI
     this.server.tool(
-      'resolve-ens-name',
-      'Get an Ethereum address from an ENS name',
-      ResolveEnsNameSchema.shape,
-      resolveEnsName
-    )
-
-    // Reverse ENS resolution
-    this.server.tool(
-      'resolve-ens-address',
-      'Get an ENS name from an Ethereum address',
-      ResolveEnsAddressSchema.shape,
-      resolveEnsAddress
+      'decode-function-data',
+      'Decode a hex string into a function call',
+      DecodeAbiSchema.shape,
+      decodeAbi
     )
 
     // Encode ABI
     this.server.tool(
-      'encode-abi',
+      'encode-function-data',
       'Encode a function call into a hex string',
       EncodeAbiSchema.shape,
       encodeAbi
-    )
-
-    // Decode ABI
-    this.server.tool(
-      'decode-abi',
-      'Decode a hex string into a function call',
-      DecodeAbiSchema.shape,
-      decodeAbi
     )
 
     // Function selector
@@ -74,6 +58,13 @@ export class EthereumMCP extends McpAgent {
       functionSelector
     )
 
+    // Generate burner wallet
+    this.server.tool(
+      'create-wallet',
+      'Generate a burner wallet with a private key and address',
+      createWallet
+    )
+
     // Keccak256 hash
     this.server.tool(
       'keccak256-hash',
@@ -82,11 +73,20 @@ export class EthereumMCP extends McpAgent {
       keccak256Hash
     )
 
-    // Generate burner wallet
+    // Reverse ENS resolution
     this.server.tool(
-      'create-wallet',
-      'Generate a burner wallet with a private key and address',
-      createWallet
+      'resolve-ens-address',
+      'Get an ENS name from an Ethereum address',
+      ResolveEnsAddressSchema.shape,
+      resolveEnsAddress
+    )
+
+    // Forward ENS resolution
+    this.server.tool(
+      'resolve-ens-name',
+      'Get an Ethereum address from an ENS name',
+      ResolveEnsNameSchema.shape,
+      resolveEnsName
     )
   }
 }

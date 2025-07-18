@@ -1,5 +1,13 @@
 # Remote MCP Server for Ethereum Tools
 
+Avaiable tools by category:
+
+- ABI: `decode-function-data`, `encode-function-data`, `function-selector`
+- Crypto: `create-wallet`, `keccak256-hash`
+- ENS: `resolve-ens-address`, `resolve-ens-name`
+
+## Installation
+
 Add the following to your MCP client (Cursor, Claude Desktop, etc.) config:
 
 ```json
