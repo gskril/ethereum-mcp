@@ -15,11 +15,7 @@ import {
   fetchAbi,
   functionSelector,
 } from './tools/abi'
-import {
-  Keccak256HashSchema,
-  createWallet,
-  keccak256Hash,
-} from './tools/crypto'
+import { Keccak256HashSchema, keccak256Hash } from './tools/crypto'
 import {
   ResolveEnsAddressSchema,
   ResolveEnsNameSchema,
@@ -89,13 +85,6 @@ export class EthereumMCP extends McpAgent {
       ].join('\n'),
       FunctionSelectorSchema.shape,
       functionSelector
-    )
-
-    // Generate burner wallet
-    this.server.tool(
-      'create-wallet',
-      'Generate a burner wallet with a private key and address',
-      createWallet
     )
 
     // Keccak256 hash

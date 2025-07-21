@@ -1,5 +1,4 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
-import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { isHex, keccak256, toHex } from 'viem/utils'
 import { z } from 'zod'
 
@@ -14,17 +13,5 @@ export function keccak256Hash({
 
   return {
     content: [{ type: 'text', text: encoded }],
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export function createWallet(): CallToolResult {
-  const privateKey = generatePrivateKey()
-  const { address } = privateKeyToAccount(privateKey)
-  const wallet = { privateKey, address }
-
-  return {
-    content: [{ type: 'text', text: JSON.stringify(wallet, null, 2) }],
   }
 }
