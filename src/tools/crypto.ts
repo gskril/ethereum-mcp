@@ -1,17 +1,17 @@
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import { isHex, keccak256, toHex } from 'viem/utils'
 import { z } from 'zod'
 
-export const Keccak256HashSchema = z.object({
-  value: z.string().describe('The value to encode'),
+import { createTool } from '../lib/utils'
+
+export const keccak256Hash = createTool({
+  schema: z.object({
+    value: z.string().describe('The value to encode'),
+  }),
+  execute: async ({ value }) => {
+    const encoded = keccak256(isHex(value) ? value : toHex(value))
+
+    return {
+      content: [{ type: 'text', text: encoded }],
+    }
+  },
 })
-
-export function keccak256Hash({
-  value,
-}: z.infer<typeof Keccak256HashSchema>): CallToolResult {
-  const encoded = keccak256(isHex(value) ? value : toHex(value))
-
-  return {
-    content: [{ type: 'text', text: encoded }],
-  }
-}

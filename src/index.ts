@@ -2,12 +2,6 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { McpAgent } from 'agents/mcp'
 
 import {
-  DecodeAbiParametersSchema,
-  DecodeAbiSchema,
-  EncodeAbiParametersSchema,
-  EncodeAbiSchema,
-  FetchAbiSchema,
-  FunctionSelectorSchema,
   decodeAbi,
   decodeAbiParameters,
   encodeAbi,
@@ -15,13 +9,8 @@ import {
   fetchAbi,
   functionSelector,
 } from './tools/abi'
-import { Keccak256HashSchema, keccak256Hash } from './tools/crypto'
-import {
-  ResolveEnsAddressSchema,
-  ResolveEnsNameSchema,
-  resolveEnsAddress,
-  resolveEnsName,
-} from './tools/ens'
+import { keccak256Hash } from './tools/crypto'
+import { resolveEnsAddress, resolveEnsName } from './tools/ens'
 
 // Define our MCP agent with tools
 export class EthereumMCP extends McpAgent {
@@ -39,40 +28,40 @@ export class EthereumMCP extends McpAgent {
         'Generates ABI encoded data given a set of ABI parameters and their corresponding values.',
         'Example: params: `[{ type: "uint32" }, { type: "bytes" }]`, values: `[1, "0x1234567890"]`',
       ].join('\n'),
-      EncodeAbiParametersSchema.shape,
-      encodeAbiParameters
+      encodeAbiParameters.schema.shape,
+      encodeAbiParameters.execute
     )
 
     // Decode ABI parameters
     this.server.tool(
       'decode-abi-parameters',
       'Decodes ABI encoded data (a hex string) into a set of ABI parameters and their corresponding values.',
-      DecodeAbiParametersSchema.shape,
-      decodeAbiParameters
+      decodeAbiParameters.schema.shape,
+      decodeAbiParameters.execute
     )
 
     // Decode ABI
     this.server.tool(
       'decode-function-data',
       'Decode a hex string into a function call',
-      DecodeAbiSchema.shape,
-      decodeAbi
+      decodeAbi.schema.shape,
+      decodeAbi.execute
     )
 
     // Encode ABI
     this.server.tool(
       'encode-function-data',
       'Encode a function call into a hex string',
-      EncodeAbiSchema.shape,
-      encodeAbi
+      encodeAbi.schema.shape,
+      encodeAbi.execute
     )
 
     // Fetch ABI
     this.server.tool(
       'fetch-abi',
       'Fetch the ABI for a smart contract',
-      FetchAbiSchema.shape,
-      fetchAbi
+      fetchAbi.schema.shape,
+      fetchAbi.execute
     )
 
     // Function selector
@@ -83,32 +72,31 @@ export class EthereumMCP extends McpAgent {
         'Examples: `function ownerOf(uint256 tokenId) returns (address)`,',
         'or you can extract `function checkPrice(string calldata token)` from the full function like `function checkPrice(string calldata token) public view returns (uint256 price, string memory priceStr) { ... }`',
       ].join('\n'),
-      FunctionSelectorSchema.shape,
-      functionSelector
+      functionSelector.schema.shape,
+      functionSelector.execute
     )
-
     // Keccak256 hash
     this.server.tool(
       'keccak256-hash',
       'Get the Keccak256 hash of a value',
-      Keccak256HashSchema.shape,
-      keccak256Hash
+      keccak256Hash.schema.shape,
+      keccak256Hash.execute
     )
 
     // Reverse ENS resolution
     this.server.tool(
       'resolve-ens-address',
       'Get an ENS name from an Ethereum address',
-      ResolveEnsAddressSchema.shape,
-      resolveEnsAddress
+      resolveEnsAddress.schema.shape,
+      resolveEnsAddress.execute
     )
 
     // Forward ENS resolution
     this.server.tool(
       'resolve-ens-name',
       'Get an Ethereum address from an ENS name',
-      ResolveEnsNameSchema.shape,
-      resolveEnsName
+      resolveEnsName.schema.shape,
+      resolveEnsName.execute
     )
   }
 }
