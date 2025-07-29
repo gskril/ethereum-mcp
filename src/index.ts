@@ -10,7 +10,12 @@ import {
   functionSelector,
 } from './tools/abi'
 import { keccak256Hash } from './tools/crypto'
-import { resolveEnsAddress, resolveEnsName } from './tools/ens'
+import {
+  convertEvmChainIdToCoinType,
+  namehash,
+  resolveEnsAddress,
+  resolveEnsName,
+} from './tools/ens'
 
 // Define our MCP agent with tools
 export class EthereumMCP extends McpAgent {
@@ -75,12 +80,29 @@ export class EthereumMCP extends McpAgent {
       functionSelector.schema.shape,
       functionSelector.execute
     )
+
     // Keccak256 hash
     this.server.tool(
       'keccak256-hash',
       'Get the Keccak256 hash of a value',
       keccak256Hash.schema.shape,
       keccak256Hash.execute
+    )
+
+    // Convert EVM chain id to cointype
+    this.server.tool(
+      'chain-id-to-cointype',
+      'Convert an EVM chain ID to an ENS cointype',
+      convertEvmChainIdToCoinType.schema.shape,
+      convertEvmChainIdToCoinType.execute
+    )
+
+    // Namehash
+    this.server.tool(
+      'namehash',
+      'Get the Namehash of an ENS name, often referred to as a node',
+      namehash.schema.shape,
+      namehash.execute
     )
 
     // Reverse ENS resolution

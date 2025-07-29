@@ -1,5 +1,7 @@
-import { createPublicClient, http, isAddress } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
+import { namehash as namehashViem } from 'viem/ens'
+import { isAddress } from 'viem/utils'
 import { z } from 'zod'
 
 import { createTool } from '../lib/utils'
@@ -40,6 +42,34 @@ export const resolveEnsAddress = createTool({
 
     return {
       content: [{ type: 'text', text: name ?? 'No name found' }],
+    }
+  },
+})
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const namehash = createTool({
+  schema: z.object({
+    name: z.string(),
+  }),
+  execute: ({ name }) => {
+    return {
+      content: [{ type: 'text', text: namehashViem(name) }],
+    }
+  },
+})
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const convertEvmChainIdToCoinType = createTool({
+  schema: z.object({
+    chainId: z.number(),
+  }),
+  execute: ({ chainId }) => {
+    const cointype = chainId === 1 ? 60 : (0x80000000 | chainId) >>> 0
+
+    return {
+      content: [{ type: 'text', text: cointype.toString() }],
     }
   },
 })
