@@ -81,6 +81,17 @@ export const checkNameAvailability = createTool({
     name: z.string(),
   }),
   execute: async ({ name }) => {
+    if (!name.endsWith('.eth') || name.split('.').length > 2) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: 'Invalid name - this tool only supports .eth 2LDs, not subdomains or other TLDs. Example: `greg.eth`',
+          },
+        ],
+      }
+    }
+
     const client = createPublicClient({
       transport: http(),
       chain: mainnet,
@@ -90,7 +101,7 @@ export const checkNameAvailability = createTool({
       address: '0x253553366Da8546fC250F225fe3d25d0C782303b', // controller.ens.eth
       abi: parseAbi(['function available(string name) view returns (bool)']),
       functionName: 'available',
-      args: [normalize(name)],
+      args: [normalize(name.slice(0, -4))],
     })
 
     return {
