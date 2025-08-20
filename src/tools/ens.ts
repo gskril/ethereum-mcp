@@ -1,6 +1,6 @@
-import { createPublicClient, http } from 'viem'
+import { createPublicClient, http, parseAbi } from 'viem'
 import { mainnet } from 'viem/chains'
-import { namehash as namehashViem } from 'viem/ens'
+import { namehash as namehashViem, normalize } from 'viem/ens'
 import { isAddress } from 'viem/utils'
 import { z } from 'zod'
 
@@ -70,6 +70,33 @@ export const convertEvmChainIdToCoinType = createTool({
 
     return {
       content: [{ type: 'text', text: cointype.toString() }],
+    }
+  },
+})
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const checkNameAvailability = createTool({
+  schema: z.object({
+    name: z.string(),
+  }),
+  execute: async ({ name }) => {
+    const client = createPublicClient({
+      transport: http(),
+      chain: mainnet,
+    })
+
+    const isAvailable = await client.readContract({
+      address: '0x253553366Da8546fC250F225fe3d25d0C782303b', // controller.ens.eth
+      abi: parseAbi(['function available(string name) view returns (bool)']),
+      functionName: 'available',
+      args: [normalize(name)],
+    })
+
+    return {
+      content: [
+        { type: 'text', text: isAvailable ? 'Available' : 'Not available' },
+      ],
     }
   },
 })

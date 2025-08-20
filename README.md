@@ -4,7 +4,7 @@ Avaiable tools by category:
 
 - ABI: `encode-abi-parameters`, `decode-abi-parameters`, `decode-function-data`, `encode-function-data`, `fetch-abi`, `function-selector`
 - Crypto: `keccak256-hash`
-- ENS: `chain-id-to-cointype`, `namehash`, `resolve-ens-address`, `resolve-ens-name`
+- ENS: `chain-id-to-cointype`, `check-ens-name-availability`, `namehash`, `resolve-ens-address`, `resolve-ens-name`
 
 ## Installation
 

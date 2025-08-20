@@ -11,6 +11,7 @@ import {
 } from './tools/abi'
 import { keccak256Hash } from './tools/crypto'
 import {
+  checkNameAvailability,
   convertEvmChainIdToCoinType,
   namehash,
   resolveEnsAddress,
@@ -95,6 +96,14 @@ export class EthereumMCP extends McpAgent {
       'Convert an EVM chain ID to an ENS cointype',
       convertEvmChainIdToCoinType.schema.shape,
       convertEvmChainIdToCoinType.execute
+    )
+
+    // Check ENS name availability
+    this.server.tool(
+      'check-ens-name-availability',
+      'Check if a .eth name is available to register in ENS',
+      checkNameAvailability.schema.shape,
+      checkNameAvailability.execute
     )
 
     // Namehash
