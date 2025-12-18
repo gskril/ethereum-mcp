@@ -16,7 +16,7 @@ export const encodeAbi = createTool({
   schema: z.object({
     abi: z.string().describe('The ABI of the contract'),
     functionName: z.string().describe('The name of the function to encode'),
-    args: z.array(z.any()).describe('The arguments to encode'),
+    args: z.array(z.unknown()).describe('The arguments to encode'),
   }),
   execute: async ({ abi, functionName, args }) => {
     const encoded = encodeFunctionData({
@@ -83,7 +83,7 @@ export const encodeAbiParameters = createTool({
       .describe(
         "Array of ABI types like `[{ type: 'uint32' }, { type: 'bytes32' }]`"
       ),
-    values: z.array(z.any()).describe('The values to encode'),
+    values: z.array(z.unknown()).describe('The values to encode'),
   }),
   execute: async ({ params, values }) => {
     const encoded = encodeAbiParametersViem(params, values)
