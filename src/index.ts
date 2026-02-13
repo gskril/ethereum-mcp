@@ -17,6 +17,7 @@ import {
   resolveEnsAddress,
   resolveEnsName,
 } from './tools/ens'
+import { ethCall } from './tools/eth'
 
 // Define our MCP agent with tools
 export class EthereumMCP extends McpAgent {
@@ -128,6 +129,14 @@ export class EthereumMCP extends McpAgent {
       'Get an Ethereum address from an ENS name',
       resolveEnsName.schema.shape,
       resolveEnsName.execute
+    )
+
+    // ETH call
+    this.server.tool(
+      'eth-call',
+      'Read data from a smart contract using an address and ABI-encoded function data',
+      ethCall.schema.shape,
+      ethCall.execute
     )
   }
 }
