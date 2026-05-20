@@ -12,7 +12,7 @@ export const resolveEnsName = createTool({
   }),
   execute: async ({ name }) => {
     const client = createPublicClient({
-      transport: http(),
+      transport: http(`https://evm.stupidtech.net/v1/${mainnet.id}`),
       chain: mainnet,
     })
 
@@ -34,7 +34,7 @@ export const resolveEnsAddress = createTool({
   }),
   execute: async ({ address }) => {
     const client = createPublicClient({
-      transport: http(),
+      transport: http(`https://evm.stupidtech.net/v1/${mainnet.id}`),
       chain: mainnet,
     })
 
@@ -93,7 +93,7 @@ export const checkNameAvailability = createTool({
     }
 
     const client = createPublicClient({
-      transport: http(),
+      transport: http(`https://evm.stupidtech.net/v1/${mainnet.id}`),
       chain: mainnet,
     })
 

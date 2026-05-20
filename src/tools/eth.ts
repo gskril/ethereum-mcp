@@ -31,7 +31,7 @@ export const ethCall = createTool({
 
     const client = createPublicClient({
       chain,
-      transport: http(),
+      transport: http(`https://evm.stupidtech.net/v1/${chain.id}`),
     })
 
     try {
