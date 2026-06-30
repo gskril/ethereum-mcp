@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { McpAgent } from 'agents/mcp'
 
+import packageJson from '../package.json'
 import {
   decodeAbi,
   decodeAbiParameters,
@@ -23,8 +24,18 @@ import { ethCall } from './tools/eth'
 export class EthereumMCP extends McpAgent {
   server = new McpServer({
     name: 'ethereum',
-    title: 'Ethereum Developer Tools',
-    version: '0.0.1',
+    title: 'Ethereum MCP',
+    version: packageJson.version,
+    description:
+      'Read-only MCP server for Ethereum and ENS development—ABI work, contract reads, name resolution, and hashing.',
+    websiteUrl: 'https://github.com/gskril/ethereum-mcp',
+    icons: [
+      {
+        src: 'https://raw.githubusercontent.com/gskril/ethereum-mcp/main/favicon.ico',
+        mimeType: 'image/x-icon',
+        sizes: ['48x48'],
+      },
+    ],
   })
 
   async init() {
