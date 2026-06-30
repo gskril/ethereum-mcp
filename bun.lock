@@ -6,6 +6,7 @@
       "name": "ethereum-mcp",
       "dependencies": {
         "@modelcontextprotocol/sdk": "1.29.0",
+        "@shazow/whatsabi": "^0.26.0",
         "agents": "0.12.4",
         "viem": "2.49.3",
         "zod": "4.4.3",
@@ -17,6 +18,9 @@
         "wrangler": "4.92.0",
       },
     },
+  },
+  "overrides": {
+    "ox": "0.14.20",
   },
   "packages": {
     "@adraffy/ens-normalize": ["@adraffy/ens-normalize@1.11.0", "", {}, "sha512-/3DDPKHqqIqxUULp8yP4zODUY1i+2xvVWsv8A79xGWdCAG+8sb0hRh0Rk2QyOJUnnbyPUAZYcpBuRe3nS2OIUg=="],
@@ -282,6 +286,8 @@
     "@scure/bip32": ["@scure/bip32@1.7.0", "", { "dependencies": { "@noble/curves": "~1.9.0", "@noble/hashes": "~1.8.0", "@scure/base": "~1.2.5" } }, "sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw=="],
 
     "@scure/bip39": ["@scure/bip39@1.6.0", "", { "dependencies": { "@noble/hashes": "~1.8.0", "@scure/base": "~1.2.5" } }, "sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A=="],
+
+    "@shazow/whatsabi": ["@shazow/whatsabi@0.26.0", "", { "dependencies": { "ox": "^0.9.17" }, "peerDependencies": { "@noble/hashes": "^2.0.1" } }, "sha512-Kvce/WjaihD8cAoTLmcte9wUGWK3I0WFElDSbcbYHlY8EULqSnmbvi2jW6hj4iA4F+QQOmLZCR4f6fBEDJvtRA=="],
 
     "@sindresorhus/is": ["@sindresorhus/is@7.0.2", "", {}, "sha512-d9xRovfKNz1SKieM0qJdO+PQonjnnIfSNWfHYnBSJ9hkjm0ZPw6HlxscDXYstp3z+7V2GOFHc+J0CYrYTjqCJw=="],
 
