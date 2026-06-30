@@ -1,6 +1,6 @@
 # Remote MCP Server for Ethereum Tools
 
-Avaiable tools by category:
+Available tools by category:
 
 - ABI: `encode-abi-parameters`, `decode-abi-parameters`, `decode-function-data`, `encode-function-data`, `fetch-abi`, `function-selector`
 - Crypto: `keccak256-hash`
@@ -9,20 +9,7 @@ Avaiable tools by category:
 
 ## Installation
 
-Add the following to your MCP client (Cursor, Claude Desktop, etc.) config:
-
-```json
-{
-  "mcpServers": {
-    "ethereum": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://ethereum-mcp.gregskril.workers.dev/mcp"]
-    }
-  }
-}
-```
-
-Some clients (like Cursor) also support a simplified config:
+Most MCP clients connect to remote servers directly over Streamable HTTP. Add this to your client config:
 
 ```json
 {
@@ -34,4 +21,19 @@ Some clients (like Cursor) also support a simplified config:
 }
 ```
 
-You might need to restart some clients (like Claude Desktop) for the tools to become available.
+### Stdio-only clients
+
+If your client only launches local subprocesses (no `url` support), use `mcp-remote` as a bridge:
+
+```json
+{
+  "mcpServers": {
+    "ethereum": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://ethereum-mcp.gregskril.workers.dev/mcp"]
+    }
+  }
+}
+```
+
+This spawns a local Node process that translates stdio to HTTP. Prefer native `url` config when your client supports it.
