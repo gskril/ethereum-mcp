@@ -9,6 +9,7 @@ import {
 } from 'viem/utils'
 import { z } from 'zod'
 
+import { fetchAbiNetworks, fetchContractAbi } from '../lib/fetch-abi'
 import { replaceBigInts } from '../lib/replaceBigints'
 import { createTool } from '../lib/utils'
 
@@ -133,37 +134,14 @@ export const fetchAbi = createTool({
       })
       .describe('The address of the contract'),
     network: z
-      .enum([
-        'mainnet',
-        'goerli',
-        'sepolia',
-        'avalanche',
-        'avalancheFuji',
-        'arbitrum',
-        'arbitrumGoerli',
-        'arbitrumNova',
-        'base',
-        'baseGoerli',
-        'bsc',
-        'bscTestnet',
-        'fantom',
-        'fantomTestnet',
-        'polygon',
-        'polygonMumbai',
-        'polygonZkEvm',
-        'polygonZkEvmTestnet',
-        'optimism',
-        'optimismGoerli',
-        'gnosis',
-      ])
+      .enum(fetchAbiNetworks)
       .default('mainnet')
       .describe(
         'The network of the contract. If not provided, the default is mainnet.'
       ),
   }),
   execute: async ({ address, network }) => {
-    const res = await fetch(`https://abidata.net/${address}?network=${network}`)
-    const data = await res.json()
+    const data = await fetchContractAbi(address, network)
 
     return {
       content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
