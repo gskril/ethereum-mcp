@@ -83,6 +83,7 @@ export const checkNameAvailability = createTool({
   execute: async ({ name }) => {
     if (!name.endsWith('.eth') || name.split('.').length > 2) {
       return {
+        isError: true,
         content: [
           {
             type: 'text',

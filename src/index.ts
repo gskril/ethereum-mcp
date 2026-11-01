@@ -1,7 +1,8 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { McpAgent } from 'agents/mcp'
+import { McpServer } from '@modelcontextprotocol/server'
+import { createMcpHandler } from 'agents/mcp/server'
 
 import packageJson from '../package.json'
+import { registerTool } from './lib/utils'
 import {
   decodeAbi,
   decodeAbiParameters,
@@ -20,9 +21,9 @@ import {
 } from './tools/ens'
 import { ethCall } from './tools/eth'
 
-// Define our MCP agent with tools
-export class EthereumMCP extends McpAgent {
-  server = new McpServer({
+// A fresh server is created per request; none of these tools use sessions
+function createServer() {
+  const server = new McpServer({
     name: 'ethereum',
     title: 'Ethereum MCP',
     version: packageJson.version,
@@ -38,130 +39,128 @@ export class EthereumMCP extends McpAgent {
     ],
   })
 
-  async init() {
-    // Encode ABI parameters
-    this.server.tool(
-      'encode-abi-parameters',
-      [
-        'Generates ABI encoded data given a set of ABI parameters and their corresponding values.',
-        'Example: params: `[{ type: "uint32" }, { type: "bytes" }]`, values: `[1, "0x1234567890"]`',
-      ].join('\n'),
-      encodeAbiParameters.schema.shape,
-      encodeAbiParameters.execute
-    )
+  // Encode ABI parameters
+  registerTool(
+    server,
+    'encode-abi-parameters',
+    [
+      'Generates ABI encoded data given a set of ABI parameters and their corresponding values.',
+      'Example: params: `[{ type: "uint32" }, { type: "bytes" }]`, values: `[1, "0x1234567890"]`',
+    ].join('\n'),
+    encodeAbiParameters
+  )
 
-    // Decode ABI parameters
-    this.server.tool(
-      'decode-abi-parameters',
-      'Decodes ABI encoded data (a hex string) into a set of ABI parameters and their corresponding values.',
-      decodeAbiParameters.schema.shape,
-      decodeAbiParameters.execute
-    )
+  // Decode ABI parameters
+  registerTool(
+    server,
+    'decode-abi-parameters',
+    'Decodes ABI encoded data (a hex string) into a set of ABI parameters and their corresponding values.',
+    decodeAbiParameters
+  )
 
-    // Decode ABI
-    this.server.tool(
-      'decode-function-data',
-      'Decode a hex string into a function call',
-      decodeAbi.schema.shape,
-      decodeAbi.execute
-    )
+  // Decode ABI
+  registerTool(
+    server,
+    'decode-function-data',
+    'Decode a hex string into a function call',
+    decodeAbi
+  )
 
-    // Encode ABI
-    this.server.tool(
-      'encode-function-data',
-      'Encode a function call into a hex string',
-      encodeAbi.schema.shape,
-      encodeAbi.execute
-    )
+  // Encode ABI
+  registerTool(
+    server,
+    'encode-function-data',
+    'Encode a function call into a hex string',
+    encodeAbi
+  )
 
-    // Fetch ABI
-    this.server.tool(
-      'fetch-abi',
-      'Fetch the ABI for a smart contract',
-      fetchAbi.schema.shape,
-      fetchAbi.execute
-    )
+  // Fetch ABI
+  registerTool(
+    server,
+    'fetch-abi',
+    'Fetch the ABI for a smart contract',
+    fetchAbi
+  )
 
-    // Function selector
-    this.server.tool(
-      'function-selector',
-      [
-        'Get the function selector for a Solidity function from the function signature or full function, event or error.',
-        'Examples: `function ownerOf(uint256 tokenId) returns (address)`,',
-        'or you can extract `function checkPrice(string calldata token)` from the full function like `function checkPrice(string calldata token) public view returns (uint256 price, string memory priceStr) { ... }`',
-      ].join('\n'),
-      functionSelector.schema.shape,
-      functionSelector.execute
-    )
+  // Function selector
+  registerTool(
+    server,
+    'function-selector',
+    [
+      'Get the function selector for a Solidity function from the function signature or full function, event or error.',
+      'Examples: `function ownerOf(uint256 tokenId) returns (address)`,',
+      'or you can extract `function checkPrice(string calldata token)` from the full function like `function checkPrice(string calldata token) public view returns (uint256 price, string memory priceStr) { ... }`',
+    ].join('\n'),
+    functionSelector
+  )
 
-    // Keccak256 hash
-    this.server.tool(
-      'keccak256-hash',
-      'Get the Keccak256 hash of a value',
-      keccak256Hash.schema.shape,
-      keccak256Hash.execute
-    )
+  // Keccak256 hash
+  registerTool(
+    server,
+    'keccak256-hash',
+    'Get the Keccak256 hash of a value',
+    keccak256Hash
+  )
 
-    // Convert EVM chain id to cointype
-    this.server.tool(
-      'chain-id-to-cointype',
-      'Convert an EVM chain ID to an ENS cointype',
-      convertEvmChainIdToCoinType.schema.shape,
-      convertEvmChainIdToCoinType.execute
-    )
+  // Convert EVM chain id to cointype
+  registerTool(
+    server,
+    'chain-id-to-cointype',
+    'Convert an EVM chain ID to an ENS cointype',
+    convertEvmChainIdToCoinType
+  )
 
-    // Check ENS name availability
-    this.server.tool(
-      'check-ens-name-availability',
-      'Check if a .eth name is available to register in ENS',
-      checkNameAvailability.schema.shape,
-      checkNameAvailability.execute
-    )
+  // Check ENS name availability
+  registerTool(
+    server,
+    'check-ens-name-availability',
+    'Check if a .eth name is available to register in ENS',
+    checkNameAvailability
+  )
 
-    // Namehash
-    this.server.tool(
-      'namehash',
-      'Get the Namehash of an ENS name, often referred to as a node',
-      namehash.schema.shape,
-      namehash.execute
-    )
+  // Namehash
+  registerTool(
+    server,
+    'namehash',
+    'Get the Namehash of an ENS name, often referred to as a node',
+    namehash
+  )
 
-    // Reverse ENS resolution
-    this.server.tool(
-      'resolve-ens-address',
-      'Get an ENS name from an Ethereum address',
-      resolveEnsAddress.schema.shape,
-      resolveEnsAddress.execute
-    )
+  // Reverse ENS resolution
+  registerTool(
+    server,
+    'resolve-ens-address',
+    'Get an ENS name from an Ethereum address',
+    resolveEnsAddress
+  )
 
-    // Forward ENS resolution
-    this.server.tool(
-      'resolve-ens-name',
-      'Get an Ethereum address from an ENS name',
-      resolveEnsName.schema.shape,
-      resolveEnsName.execute
-    )
+  // Forward ENS resolution
+  registerTool(
+    server,
+    'resolve-ens-name',
+    'Get an Ethereum address from an ENS name',
+    resolveEnsName
+  )
 
-    // ETH call
-    this.server.tool(
-      'eth-call',
-      'Read data from a smart contract using an address and ABI-encoded function data',
-      ethCall.schema.shape,
-      ethCall.execute
-    )
-  }
+  // ETH call
+  registerTool(
+    server,
+    'eth-call',
+    'Read data from a smart contract using an address and ABI-encoded function data',
+    ethCall
+  )
+
+  return server
 }
+
+const handler = createMcpHandler(createServer)
 
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url)
 
-    if (url.pathname === '/sse' || url.pathname === '/sse/message') {
-      return EthereumMCP.serveSSE('/sse').fetch(request, env, ctx)
-    }
-
     if (url.pathname === '/mcp') {
-      return EthereumMCP.serve('/mcp').fetch(request, env, ctx)
+      return handler(request, env, ctx)
     }
 
     return new Response('Not found', { status: 404 })
