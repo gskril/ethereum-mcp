@@ -23,6 +23,7 @@ export const ethCall = createTool({
 
     if (!chain) {
       return {
+        isError: true,
         content: [
           { type: 'text', text: 'Cannot find client. Unsupported chain.' },
         ],
@@ -47,6 +48,7 @@ export const ethCall = createTool({
       const err = error as Error
 
       return {
+        isError: true,
         content: [
           { type: 'text', text: `Error calling contract: ${err.message}` },
         ],

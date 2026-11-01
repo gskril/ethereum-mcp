@@ -13,15 +13,11 @@
       "new_sqlite_classes": ["EthereumMCP"],
       "tag": "v1",
     },
+    {
+      "deleted_classes": ["EthereumMCP"],
+      "tag": "v2",
+    },
   ],
-  "durable_objects": {
-    "bindings": [
-      {
-        "class_name": "EthereumMCP",
-        "name": "MCP_OBJECT",
-      },
-    ],
-  },
   "observability": {
     "enabled": true,
   },
